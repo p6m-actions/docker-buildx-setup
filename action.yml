@@ -1,0 +1,22 @@
+name: "Docker Buildx Setup"
+description: "Sets up Docker Buildx for multi-platform builds in GitHub Actions"
+author: "Jimmie Fulton <jimmie.fulton@gmail.com>"
+
+# Define the outputs for this action
+outputs:
+  name:
+    description: "The name of the buildx instance"
+    value: ${{ steps.buildx.outputs.name }}
+
+# Define the runs configuration
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Docker Buildx
+      id: buildx
+      uses: docker/setup-buildx-action@v2
+
+# Define the branding for the action in the GitHub Marketplace
+branding:
+  icon: "package"
+  color: "blue"
