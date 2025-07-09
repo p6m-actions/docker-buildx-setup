@@ -7,6 +7,12 @@ outputs:
   name:
     description: "The name of the buildx instance"
     value: ${{ steps.buildx.outputs.name }}
+  driver:
+    description: "The driver being used"
+    value: ${{ steps.buildx.outputs.driver }}
+  endpoint:
+    description: "The builder endpoint"
+    value: ${{ steps.buildx.outputs.endpoint }}
 
 # Define the runs configuration
 runs:

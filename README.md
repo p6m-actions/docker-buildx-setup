@@ -18,6 +18,8 @@ A GitHub Action that sets up Docker Buildx for multi-platform container builds. 
 | Name | Description |
 |------|-------------|
 | `name` | The name of the buildx instance |
+| `driver` | The driver being used |
+| `endpoint` | The builder endpoint |
 
 ## Examples
 
@@ -66,6 +68,60 @@ steps:
       docker buildx build \
         --platform $PLATFORMS \
         --tag your-registry.example.com/your-image:latest \
+        --push \
+        .
+```
+
+### Using with docker-buildx-build-publish
+
+This action pairs seamlessly with [docker-buildx-build-publish](https://github.com/p6m-actions/docker-buildx-build-publish) for advanced build workflows:
+
+```yaml
+steps:
+  - name: Checkout Code
+    uses: actions/checkout@v3
+
+  - name: Set up Docker Buildx
+    id: buildx
+    uses: p6m-actions/docker-buildx-setup@v1
+
+  - name: Build and push Docker image
+    uses: p6m-actions/docker-buildx-build-publish@v1
+    with:
+      skip-setup: true
+      builder-name: ${{ steps.buildx.outputs.name }}
+      image: your-registry.example.com/your-image
+      tags: |
+        latest
+        v1.0.0
+      platforms: linux/amd64,linux/arm64
+      registry: your-registry.example.com
+      username: ${{ secrets.REGISTRY_USERNAME }}
+      password: ${{ secrets.REGISTRY_PASSWORD }}
+```
+
+### Advanced builder configuration
+
+Access builder details for custom workflows:
+
+```yaml
+steps:
+  - name: Set up Docker Buildx
+    id: buildx
+    uses: p6m-actions/docker-buildx-setup@v1
+
+  - name: Show builder information
+    run: |
+      echo "Builder name: ${{ steps.buildx.outputs.name }}"
+      echo "Driver: ${{ steps.buildx.outputs.driver }}"
+      echo "Endpoint: ${{ steps.buildx.outputs.endpoint }}"
+
+  - name: Custom build with builder details
+    run: |
+      docker buildx build \
+        --builder ${{ steps.buildx.outputs.name }} \
+        --platform linux/amd64,linux/arm64 \
+        --tag your-image:latest \
         --push \
         .
 ```
