@@ -20,7 +20,7 @@ runs:
   steps:
     - name: Set up Docker Buildx
       id: buildx
-      uses: docker/setup-buildx-action@v2
+      uses: docker/setup-buildx-action@v4
 
 # Define the branding for the action in the GitHub Marketplace
 branding:
